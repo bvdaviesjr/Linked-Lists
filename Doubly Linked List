@@ -1,0 +1,233 @@
+// Here is the Node Class
+class Node{
+	constructor(val){
+		this.val = val;
+		this.next = null;
+		this.prev = null;
+	}
+}
+
+// Here is the Doubly Linked List Class
+class DoublyLinkedList{
+	constructor(){
+		this.head = null;
+		this.tail = null;
+		this.length = 0;
+}
+
+	// This method will be used to add a new Node to the Linked List
+	// This method will take an argument to enable it add a Node to the List
+	push(val){
+		// This code will create a new Node
+		var newNode = new Node(val);
+		// This code will check if the List is empty
+		// If yes, it will set the head and tail to the Newly created Node
+		if(this.length === 0){
+			this.head = newNode;
+			this.tail = newNode;
+		} else {
+			// The code will run when the List is not empty
+			// This code will add a new Node at the end of the Tail Node and link it
+			this.tail.next = newNode;
+			// This code will create a link from the newly added Node to current Tail Node (backward)
+			newNode.prev = this.tail;
+			// This code sets the newly created Node as the Tail Node
+			this.tail = newNode;
+		}
+		// This code add (+1) to the length of the List
+		this.length++;
+		// This code will return the entire list
+		return this;
+	}
+
+	// This method will remove a Node from the end of the Doubly Linked List
+	pop(){
+		// This code will check if the list is empty
+		if(!this.head) return undefined;
+		// This code will get the last Node
+		var poppedNode = this.tail;
+		// This code will check if the list has only (1) item
+		if(this.length === 1){
+			// If yes, it will set it head and tail properties to null - remove the only item
+			this.head = null;
+			this.tail = null;
+		} else {
+			// This code sets the previous Node as the new Tail Node
+			this.tail = poppedNode.prev;
+			// This code removes connection (delete) the last Node
+			this.tail.next = null;
+			// Since it has dual connections, this code removes the second (backward) connection from the deleted Node
+			poppedNode.prev = null;
+		}
+		// This code will decrease the length of the List
+		this.length--;
+		// This code will return the removed Node to the Method
+		return poppedNode;
+	}
+
+	// This code removes a Node from the beginning a List
+	shift(){
+		// This code checks if the list is empty
+		if(this.length === 0) return undefined;
+		// If not - there is a head, this code creates a variable to hold the current head
+		var oldHead = this.head;
+		// This code checks if there is only one element in the list
+		if(this.length === 1){
+			// If there is only 1 element in the list, the code deletes the Node
+			// and sets both head and tail Nodes to null
+			this.head = null;
+			this.tail = null;
+		}else{
+			//This code sets the current head to the Next Node within the List
+			this.head = oldHead.next;
+			// This code removes the first Node within the List (backwards)
+			this.head.prev = null;
+			// This code removes the connection of the first Node of the List (forward)
+			oldHead.next = null;
+		}
+		// This code decreases the length of the list
+		this.length--;
+		// This code returns the deleted Node
+		return oldHead;
+	}
+	
+	// This code will add a Node at the beginning of the List
+	unshift(val){
+		// This code will create a new Node - the Node you intend to add to the list
+		let newNode = new Node(val)
+		// This code will check if the link is empty
+		if(this.length === 0){
+			//If yes, both the head and tail will be set to the New Node
+			this.head = newNode;
+			this.tail = this.head;
+		}else{
+			// This code will run then there are 1 or more Nodes in the List
+			// This code will create a connection btw the head the a new Node (backward)
+			this.head.prev = newNode;
+			// This code will create a connection btw the head the a new Node (forward)
+			newNode.next = this.head;
+			// This code will set the head Node to be the new Node
+			this.head = newNode
+		}
+		// This code will increment the length of the List
+		this.length++;
+		// This code will return the entire list to the method
+		return this;
+	}
+
+	// The method is used to access a Node in a Doubly LinkedList by its position  
+	get(index){
+		// This code checks whether the userinput/index is valid if not return null
+		if(index < 0 || index >= this.length) return null;
+		// This code creates two variables. 
+		// Count keeps track of each Node that is accessed in the List and increment accordingly
+		// Current variable will be used to move from one Node to the Next in the List
+		var count, current;
+		// This code checks whether the index(user inputted value) is found within the first half the the List 
+		if(index <= this.length/2){
+		// Count variable keeps track of each Node that is accessed in the List and increment accordingly
+			count = 0;
+			// Current variable will be used to move from one Node to the Next in the List
+			current = this.head;
+			// This loop will be used to iterate through the List as long as the Count != the index(the user input)
+			// This code will iterate until it reaches the index-1 Node (user inputted value)
+			while(count !== index){
+			// This code updates from the Head Node continously to the Node with the Index-1 Node
+				current = current.next;
+				// This code will increase the count variable accordingly
+				count++;
+			}
+		} else {
+			// This block of code will run when the user input (index) is found at the second half of the List
+			// This code will get length of the List
+			count = this.length - 1;
+			// Get the current Node
+			current = this.tail;
+			// This code will run as long as the loop has not reached the User-Index-1
+			while(count !== index){
+				// this code will move backwards in the list
+				current = current.prev;
+				//this code will decrement count until you reach the Node you are searching for
+				count--;
+			}
+		}
+		// this code will return current Node / the actual Node you were searching for
+		return current;
+	}
+
+	// This method will be used to replace the value of the Node to the index in a Doubly Linked List
+	// This method will take two inputs. The index you want to search for and the value you intend to add to the list
+	set(index, val){
+		// This code will get a Node at a particular index
+		var foundNode = this.get(index);
+		// The code will check whether the variable actual has a Node
+		if(foundNode != null){
+			// This code will set the foundNode value to the value inputted by the user
+			foundNode.val = val;
+			// This code will return true
+			return true;
+		}
+		return false;
+	}
+
+	// This method will add a Node and its value in a Doubly Linked List a certain position (index)
+	insert(index, val){
+		// This code will check if the index is actually valid
+		if(index < 0 || index > this.length) return false;
+		// This code gets the first Node
+		if(index === 0) return !!this.unshift(val);
+		// This code gets the last Node
+		if(index === this.length) return !!this.push(val);
+		// This code creates a new Node
+		var newNode = new Node(val);
+		// This code will get the Node before the index position 
+		var beforeNode = this.get(index-1);
+		// This code will get the Node after the index position
+		var afterNode = beforeNode.next;
+		// This code will set a connection from the previous Node to the newly inserted Node
+		beforeNode.next = newNode ;
+		// This code will create a connection between the new Node and the previous Node
+		newNode.prev = beforeNode;
+		// This code will create a connection between the newly created Node and the Node at it
+		newNode.next = afterNode;
+		// This code will create a connection between the Node ahead of the newly created Node and the new Node
+		afterNode.prev = newNode;
+		// This code will return the length of the list
+		this.length++;
+		// This code will show that the method executed successfully
+		return true;
+	}
+
+	//This method will be used to remove a Node from the List at a specific position
+	remove(index){
+		// This code checks if the index is valid
+		if(index < 0 || index >= this.length) return undefined;
+		// This code checks if the index is equivalent to the first Node and deletes it
+		if(index === 0) return this.shift();
+		// This code checks if the index is equivalent to the last Node and deletes it
+		if(index === this.length -1) return this.pop();
+		// This code gets the Node you intend to remove, if it's not at the beginning or end of the list
+		let removedNode = this.get(index);
+		// This code set a connection to the Node after the removeNode
+		removedNode.prev.next = removedNode.next;
+		// This code will a connection to the Node before the removedNode
+		removedNode.next.prev = removedNode.prev;
+		//this code will delete the connection with the next Node
+		removedNode.next = null;
+		// this code will delete the connection with the previous Node
+		removedNode.prev = null;
+		// this code will increment the length of the List
+		this.length--;
+		// this code will return the Node that was removed
+		return removedNode;
+		
+	}
+
+	
+}
+
+let list = new DoublyLinkedList();
+list.push(100);
+list.push(200);
+list.push(300);
+list.push(400);
