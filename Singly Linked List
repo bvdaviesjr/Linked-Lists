@@ -1,0 +1,257 @@
+Singly LinkedList - Full Implementation (with all of its Methods)
+
+// Node Class Implementation
+class Node{
+	constructor(val){
+		this.val = val;
+		this.next = null;
+	}
+}
+
+// LinkedList Class Impementation
+class SinglyLinkedList{
+	constructor(){
+		this.head = null;
+		this.tail = null;
+		this.length = 0;
+	}
+	
+	// This method is used to push/put a Node in the LinkedList
+	push(val){
+		let newNode = new Node(val)
+		if(!this.head){
+			this.head = newNode;
+			this.tail = this.head;
+		}else{
+			this.tail.next = newNode;
+			this.tail = newNode;
+		}
+		this.length++; // This code will increment the length of the list
+		return this; // This code will return the entire list
+	}
+
+	// This method will loop through the entire list and display the values
+	traverse(){
+		// This code gets the head Node
+		let current = this.head;
+		//This code traverse the list
+		while(current){
+			console.log(current.val);
+			// This code move the pointer to the next Node in the list
+			current = current.next;
+		}
+	}
+
+	// This method will remove a Node from the end of the LinkedList
+	pop(){
+		// This code checks whether the Node is empty and return undefined
+		// Note: If there is no Head Node, the list is empty
+		if(!this.head) return undefined;
+		// Below, we have created 2 variables
+		// current-variable will be used to loop through the list until the end and hold the last variable
+		// newText-variable will be used to also loop through the list and will hold the second to last element
+		let current = this.head;
+		let newTail = current;
+		//The code will be used to loop through list
+		while(current.next){
+			//newTail variable will always be set to what current-variable was
+			newTail = current;
+			// This code will be used to move the current-variable to the next Node
+			// At this point current variable will be one (+1) step ahead of the previous current/newTail
+			current = current.next;
+		}
+		// set the Tail variable to host the variable wih newTail
+		this.tail = newTail;
+		// the code below will remove/break the connection with the last element in the list
+		this.tail.next = null;
+		// this code will show decrement the length of the list
+		this.length--;
+		//this code will set the head and tail to null if there is no content in the list
+		if(this.length === 0){
+			this.head = null;
+			this.tail = null;
+		}
+		// this code will return the last element that was popped from the list
+		return current;  
+	}
+
+	// This method will remove a node from the beginning of a LinkedList
+	shift(){
+		if(!this.head) return undefined;
+		// store the current head value in a variable
+		let currentHead = this.head;
+		this.head = currentHead.next;
+		//decrement the length of the LinkedList
+		this.length--;
+		//set null variables when the list is empty
+		if(this.length === 0){
+			this.tail = null;
+		}
+		//return the head-value that was removed
+		return currentHead;
+	}
+
+	// This method will add a new node to the beginning of a LinkedList
+	unshift(val){
+		// This code will create the new Node
+		let newNode = new Node(val);
+		if(!this.head){
+			this.head = newNode;
+			this.tail = this.head;
+		}
+		// The code will link the newly created Node with the current
+		newNode.next = this.head;
+		// This code will set the newly created Node as the head (like reversing its position)
+		this.head = newNode;
+		// This code will increase the length of the list
+		this.length++;
+		return this;
+	}
+
+	// This method will be used to retrieve element from a list by a certain position
+	get(index){
+		// This code will check whether the index (value inserted by user) is within the list
+		if(index < 0 || index >= this.length) return null;
+		// This code will be used to count and add one to the count variable at every iteration of the loop
+		var counter = 0;
+		// This code will set the current variable
+		var current = this.head;
+		// This loop will iterate as long as the counter is not equal to the index (user input)
+		while(counter !== index){
+		// The code will move the current variable to the next Node in the list
+			current = current.next;
+			// This code will increase the counter variable by (1)
+			counter++;
+		}
+		// This code will return the current Node after the condition in the loop iterate to false
+		return current;
+	}
+
+
+	// This method will be used to change the value of a Node based on it's position in the LinkedList
+	// This method take the index you intend to find and the value you intend to replace with the index
+	
+	set(index, val){
+	// This code will call the get method with the index you have inputted to check whether it's available in the list
+		var foundNode = this.get(index);
+		// The code will check if the node is found then it will be updated with the new value 
+		if(foundNode){
+			foundNode.val = val;
+			return true;
+		}
+		//This code will run if the index is not found in the list
+		return false;
+	}
+
+	// This method will be used to add a Node to the List at a specific position
+	// It will not update a Node rather it will add a new Node to the List
+	insert(index, val){
+	// This code will check if the index is negative or the index is greater than the length of the list
+
+		// If so, the developer must stop the code else it will display an error
+		if(index < 0 || index > this.length) return false;
+		// This code will add a value to the list using the push method if the index value is found within the list
+		if(index === this.length){
+			this.push(val);
+			return true;
+		}
+		// This code will add a value to the start of the list using the unshift method if the index is zero (0)
+		if(index === 0){
+			this.unshift(val);
+			return true;
+		}
+		// The block of code below will be executed if we are trying to insert a Node within the middle of the list
+		// This line below will create a new Node
+		var newNode = new Node(val);
+		// The code will get the index before the index-position in which you intend to put an item
+		var prev = this.get(index - 1);
+		//This is a temporary value that will hold the Node at the position where you intend push one step ahead to add the new Node
+		var temp = prev.next;
+		// This will hold or create a connection with the new Node that was created above
+		prev.next = newNode;
+		// This will hold or create a connection to the Node that push a step ahead to create space for the new Node that was create
+		newNode.next = temp;
+		// This code will increase the length of the list because a Node was added
+		this.length++;
+		// This code will run when the method is successful
+		return true;
+	}
+
+	// This method will be used to remove a Node from the Linked List at a specific position
+	
+	remove(index){
+		// This code will check whether user input (index) is less than zero (0) or it's greater than the length of the Linked List
+		if(index < 0 || index >= this.length) return undefined;
+		// This code will check if the user input (index) is equal to the first Node. 
+		// If yes, the shift method will be called to remove the Node from the front of the list
+		if(index === 0) return this.shift();
+		// The code will check if the index/user input is equal to the Node at the end of the List
+
+		// If yes, the pop method will be called to remove the element from the end of the Linked List
+		if(index === this.length - 1) return this.pop();
+		// If block of code below will be implemented when the index is within the middle of the List
+
+		// This code will be used to find the Node before the Node you are searching for
+		var previousNode = this.get(index - 1);
+		// This code will get the Node that you intend to remove
+		var removed = previousNode.next;
+		// This code will disconnect from the Node you intend to delete and create a connection with its next Node
+		
+		// This code will delete the specific Node and connect to the appropriate Node
+		previousNode.next = removed.next;
+		// This code will decrease the length of the Node
+		this.length--;
+		// The code will return the deleted Node
+		return removed;
+	}
+
+
+	// This method will be used to reverse the elements/Nodes of  Linked List 
+	// List: [100, 201, 250, 350, 999]  Reverse Result: [999 -> 350 -> 250 -> 201 -> 100 -> null]
+	
+	reverse(){
+		// This variable will hold the head Node
+		var node = this.head;
+		// This variable will set the head Node to the value of the Tail Node(swap head with tail)
+		this.head = this.tail;
+		// This variable will set the Tail Node to the value of the Head Node(swap tail with head)
+		this.tail = node;
+		// This variable will hold the next Node from the current Node
+		var next;
+		// This variable will hold the previous Node from the current Node
+		// The variable is set to null because there is no previous Node(it will be the tail)
+		var prev = null;
+		// This loop will iterate through the entire Linked List
+		for(var i = 0; i < this.length; i++){
+			// This code sets the next variable to be the current Variable Next Node
+			next = node.next;
+			// This variable (node.next) which is the Tail Node next Node will be set to Null, since there is no Node after the Tail
+			node.next = prev;
+			// The previous Node that is Null will now take the value of the 
+			prev = node;
+			node = next;
+		}
+		return this;
+		}
+
+	//This method will add the Linked List variable to an array and print the result in a linear form
+
+	print(){
+		var arr = [];
+		var current = this.head
+		while(current){
+			arr.push(current.val)
+			current = current.next
+		}
+		console.log(arr);
+	}
+
+}
+
+// Create an instance/object of the SinglyLinkedList Class
+let firstNode = new SinglyLinkedList();
+// Add Node to the Linked List
+firstNode.push(100);
+firstNode.push(200);
+firstNode.push(300);
+firstNode.push(400);
